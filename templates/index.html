@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <base href="/">
+    <title>С Днем Рождения моя Любимочка!</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 50px auto; padding: 20px; }
+        #codeForm { display: flex; gap: 10px; margin-bottom: 20px; }
+        input { flex: 1; padding: 10px; border: 1px solid #ddd; }
+        button { padding: 10px 20px; background: #007bff; color: white; border: none; cursor: pointer; }
+        #result { padding: 15px; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+<h1>Введи найденый код и получи следующую подсказку ;)</h1>
+<form id="codeForm">
+    <input type="text" name="code" placeholder="Введи код (например, ABC123)" required>
+    <button type="submit">Проверить</button>
+</form>
+<div id="result"></div>
+
+<script>
+    document.getElementById("codeForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const response = await fetch("/check-code", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: new URLSearchParams(formData)
+        });
+
+        const data = await response.json();
+        const resultDiv = document.getElementById("result");
+        resultDiv.textContent = data.message;
+        resultDiv.className = data.message.includes("❌") ? "error" : "success";
+    });
+</script>
+</body>
+</html>
